@@ -35,6 +35,24 @@ jobs:
       - name: Extract project
         run: unzip -o AfsharDam-Final-Android-Source.zip
 
+      - name: Align Java and Kotlin versions
+        run: |
+          cat >> AfsharDam/app/build.gradle.kts <<'EOF'
+
+          android {
+              compileOptions {
+                  sourceCompatibility = JavaVersion.VERSION_17
+                  targetCompatibility = JavaVersion.VERSION_17
+              }
+          }
+
+          tasks.withType<org.jetbrains.kotlin.gradle.tasks.KotlinCompile>().configureEach {
+              kotlinOptions {
+                  jvmTarget = "17"
+              }
+          }
+          EOF
+
       - name: Build APK
         working-directory: AfsharDam
         run: gradle assembleDebug
